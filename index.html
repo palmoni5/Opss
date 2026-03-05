@@ -12,6 +12,7 @@
             padding: 0;
             margin: 0;
             font-family: Arial, sans-serif;
+            cursor: pointer; 
         }
         
         .block-msg {
@@ -40,7 +41,7 @@
             font-weight: 700;
             margin-top: -50px;
             margin-bottom: -36px; 
-            color: #009cda29; /* צבע ספציפי לחסימת מגזר (sector) כמו במקור */
+            color: #009cda29;
         }
 
         #message {
@@ -83,6 +84,34 @@
         </div>
         
     </div>
-    <audio src="Opss.mp3" autoplay loop hidden></audio>
+
+    <audio id="oopsAudio" src="Opss.mp3" preload="auto"></audio>
+
+    <script>
+        function initAudio() {
+            var audio = document.getElementById("oopsAudio");
+            var playCount = 0;
+            var maxPlays = 3;
+
+            // מסירים את ההאזנה גם לעכבר וגם למקלדת כדי שהקובץ לא יופעל פעמיים במקביל
+            document.removeEventListener("click", initAudio);
+            document.removeEventListener("keydown", initAudio);
+
+            audio.play().then(function() {
+                audio.onended = function() {
+                    playCount++; 
+                    if (playCount < maxPlays) {
+                        audio.play(); 
+                    }
+                };
+            }).catch(function(error) {
+                console.log("שגיאה בהפעלה:", error);
+            });
+        }
+
+        // מוסיפים מאזינים - גם ללחיצת עכבר (click) וגם ללחיצת מקלדת (keydown)
+        document.addEventListener("click", initAudio);
+        document.addEventListener("keydown", initAudio);
+    </script>
 </body>
 </html>
